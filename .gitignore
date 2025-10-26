@@ -1,0 +1,44 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+#Tmp
+*.tmp
+*.log
+*.backup
+*.import
+*.converted.*
+*.old
+.thumbnail/
+.cache/
+
+#Linux specific
+*~
+
+#MOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#WIN specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+#IDE
+.vscode/
+.idea/
+
+#Mono
+
+.mono/
+.data_/
+*.csproj
+*.sln
+*.userprefs
+obj/
+bin/
+
+#Build
+/build/
+/exports/

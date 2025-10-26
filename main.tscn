@@ -1,0 +1,97 @@
+[gd_scene load_steps=15 format=3 uid="uid://yc4jfemj3kba"]
+
+[ext_resource type="Script" uid="uid://jfmg15wlj40w" path="res://main.gd" id="1_1bvp3"]
+[ext_resource type="Script" uid="uid://cp3vjuxoiqpi5" path="res://box_generator.gd" id="1_h2yge"]
+[ext_resource type="Script" uid="uid://cc1lrqkttajpg" path="res://character_body_3d.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://ge2cmnccxia6" path="res://orbital_camera.gd" id="2_0xm2m"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ig7tw"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7dm0k"]
+radius = 100.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+albedo_color = Color(0.798757, 0.415666, 0.243595, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0xm2m"]
+material = SubResource("StandardMaterial3D_ig7tw")
+radius = 100.0
+height = 200.0
+radial_segments = 512
+rings = 256
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0xm2m"]
+radius = 1000.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1bvp3"]
+material = SubResource("StandardMaterial3D_h2yge")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_h2yge"]
+material = SubResource("StandardMaterial3D_0xm2m")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lquwl"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_1bvp3")
+
+[node name="BoxGenerator" type="Node3D" parent="."]
+script = ExtResource("1_h2yge")
+how_many = 200
+radius = 120.0
+
+[node name="Planet" type="StaticBody3D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_ig7tw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Planet"]
+shape = SubResource("SphereShape3D_7dm0k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Planet"]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_0xm2m")
+skeleton = NodePath("../..")
+
+[node name="GravityField" type="Area3D" parent="Planet"]
+collision_layer = 0
+monitorable = false
+gravity_space_override = 2
+gravity_point = true
+gravity_point_unit_distance = 100.0
+gravity_point_center = Vector3(0, 0, 0)
+gravity_direction = Vector3(0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Planet/GravityField"]
+shape = SubResource("SphereShape3D_0xm2m")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, -7.45058e-09, -2.98023e-08, 7.45058e-09, 1, 0, -2.98023e-08, -1.49012e-08, 1, 2.38419e-07, 100.356, 4.76837e-07)
+safe_margin = 0.005
+script = ExtResource("1_ig7tw")
+
+[node name="body" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_1bvp3")
+
+[node name="eye" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.5)
+mesh = SubResource("SphereMesh_h2yge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_lquwl")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+shadow_enabled = true
+
+[node name="OrbitalCamera" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
+transform = Transform3D(-1, 7.45058e-09, -8.9407e-08, 7.45058e-09, 1, 0, 8.9407e-08, -6.66134e-16, -1, 0, 0, 0)
+script = ExtResource("2_0xm2m")
+elevation = 0.991748
+target = NodePath("../CharacterBody3D")
